@@ -18,30 +18,30 @@ BLACK = (0,0,0)
 ## LOAD BACKGROUND IMAGES
 gameDisplay = pygame.display.set_mode((1159,659))
 pygame.display.set_caption('Food Run')
-background_image = pygame.image.load("street1.png").convert()
-intro_image = pygame.image.load("intro.png").convert()
-map2 = pygame.image.load("map2.png").convert()
-map3 = pygame.image.load("df.png").convert()
-spa = pygame.image.load("pool.png").convert()
+background_image = pygame.image.load("resources/imgs/backgrounds/street1.png").convert()
+intro_image = pygame.image.load("resources/imgs/backgrounds/intro.png").convert()
+map2 = pygame.image.load("resources/imgs/maps/map2.png").convert()
+map3 = pygame.image.load("resources/imgs/maps/df.png").convert()
+spa = pygame.image.load("resources/imgs/maps/pool.png").convert()
 
 ## load male images
-manUL = pygame.image.load('pl1UpLeft.png')
-manUR = pygame.image.load('pl1UpRight.png')
-manDL = pygame.image.load('pl1DownLeft.png')
-manDR = pygame.image.load('pl1DownRight.png')
+manUL = pygame.image.load('resources/imgs/characters/male/pl1UpLeft.png')
+manUR = pygame.image.load('resources/imgs/characters/male/pl1UpRight.png')
+manDL = pygame.image.load('resources/imgs/characters/male/pl1DownLeft.png')
+manDR = pygame.image.load('resources/imgs/characters/male/pl1DownRight.png')
 
 ## load woman images
-womanUL = pygame.image.load('pl2UL.png')
-womanUR = pygame.image.load('pl2UR.png')
-womanDL = pygame.image.load('pl2DL.png')
-womanDR = pygame.image.load('pl2DR.png')
+womanUL = pygame.image.load('resources/imgs/characters/female/pl2UL.png')
+womanUR = pygame.image.load('resources/imgs/characters/female/pl2UR.png')
+womanDL = pygame.image.load('resources/imgs/characters/female/pl2DL.png')
+womanDR = pygame.image.load('resources/imgs/characters/female/pl2DR.png')
 
-## load objective images
-banana = pygame.image.load('banana.png')
-bacon = pygame.image.load('bacon.png')
-kfc = pygame.image.load("kfc.png")
-wand = pygame.image.load("potion.png")
-rocks = pygame.image.load("mo.png")
+## load object images
+banana = pygame.image.load('resources/imgs/items/banana.png')
+bacon = pygame.image.load('resources/imgs/items/bacon.png')
+kfc = pygame.image.load("resources/imgs/items/kfc.png")
+wand = pygame.image.load("resources/imgs/items/potion.png")
+rocks = pygame.image.load("resources/imgs/items/mo.png")
 
 ## SETUP FONT
 font = pygame.font.SysFont(None, 45)
@@ -146,7 +146,7 @@ def initalize():
     pygame.time.delay(400)
     score_counter("Initalizing.", WHITE, 400, 257)
     pygame.display.update()
-    pygame.time.delay(250)   
+    pygame.time.delay(250)
     gameDisplay.fill(BLACK)
     score_counter("Initalizing..", WHITE, 400, 257)
     pygame.display.update()
@@ -154,14 +154,14 @@ def initalize():
     score_counter("Initalizing...", WHITE, 400, 257)
     pygame.display.update()
     pygame.time.delay(300)
-    
+
 def closing():
             gameDisplay.fill(BLACK)
             score_counter("Closing....", WHITE, 400, 257)
             pygame.time.delay(350)
             score_counter("Closing...", WHITE, 400, 257)
             pygame.display.update()
-            pygame.time.delay(250)   
+            pygame.time.delay(250)
             gameDisplay.fill(BLACK)
             score_counter("Closing..", WHITE, 400, 257)
             pygame.display.update()
@@ -175,20 +175,20 @@ def closing():
 def music():
     x = randint (1,7)
     if(x == 1):
-        pygame.mixer.music.load("tec.mp3")
+        pygame.mixer.music.load("resources/audio/soundtrack/tec.mp3")
     elif(x==2):
-        pygame.mixer.music.load("fl.wav")
+        pygame.mixer.music.load("resources/audio/soundtrack/fl.wav")
     elif(x==3):
-        pygame.mixer.music.load("BEAST1.wav")
+        pygame.mixer.music.load("resources/audio/soundtrack/BEAST1.wav")
     elif(x==4):
-        pygame.mixer.music.load("46.wav")
+        pygame.mixer.music.load("resources/audio/soundtrack/46.wav")
         background = spa
     elif(x==5):
-        pygame.mixer.music.load("A.wav")
+        pygame.mixer.music.load("resources/audio/soundtrack/A.wav")
     elif(x==6):
-        pygame.mixer.music.load("WT2.wav")
+        pygame.mixer.music.load("resources/audio/soundtrack/WT2.wav")
     elif(x==7):
-        pygame.mixer.music.load("PS2.wav")
+        pygame.mixer.music.load("resources/audio/soundtrack/PS2.wav")
 
     gameDisplay.fill(BLACK)
     pygame.mixer.music.play(-1,0)
@@ -200,14 +200,14 @@ def manScoreUP(womanScore, manScore):
 def womanScoreUP(manScore, womanScore):
     score_counter("Player 2:   " + str(womanScore), GOLD, 155, 13)
     score_counter("Player 1:   " + str(manScore), WHITE, 785, 17)
-    
+
 def introMain():
     score_counter("FOOD RUN", GOLD, 450, 180)
     score_counter("Press i: To View Instructions", BLACK, 400, 257)
     score_counter("Press n: To Select Player Mode", WHITE, 400, 307)
     score_counter("Press w: To Set Winning Points", BLACK, 400, 357)
     score_counter("Press s to Start", BLACK, 450, 457)
-    
+
 def instructionMenu():
     score_counter("Instructions", GOLD, 455, 17)
     score_counter("Use the arrow keys to move the character(s) to collect", BLACK, 180, 80)
@@ -215,7 +215,7 @@ def instructionMenu():
     score_counter("player mode is enabled the second player uses the keys (a)" , BLACK, 180, 160)
     score_counter("to go left, (d) up, (w) right, and (x) to move down. ", BLACK, 180, 200)
     score_counter("Press M to return to the main menu", BLACK, 375, 517)
-    
+
 def playerScreen(character, womanDL, manDR):
     score_counter("Players Select", GOLD, 455, 17)
     score_counter("Player mode:  "+ character.upper(), BLACK, 400, 110)
@@ -228,7 +228,7 @@ def playerScreen(character, womanDL, manDR):
         gameDisplay.blit(womanDL,(530,180))
     elif(character == "man"):
         gameDisplay.blit(manDR,(420,150))
-        
+
 def winScreen(win):
     score_counter("Win Limit", GOLD, 455, 17)
     score_counter("Points to Win:  ", BLACK, 430, 110)
@@ -245,10 +245,10 @@ def checkForWin(manScore, womanScore, character):
             pygame.display.update()
             if(manScore > womanScore):
                 score_counter("Player One Lead", BLACK, 440, 280)
-                
+
             else:
                 score_counter("Player Two Lead", BLACK, 440, 280)
-                
+
         score_counter("Final Score:  " + str(womanScore + manScore), BLACK, 455, 340)
         pygame.display.update()
         pygame.time.delay(2500)
@@ -256,7 +256,7 @@ def checkForWin(manScore, womanScore, character):
         pygame.quit()
         quit()
         return gameExit
-    
+
 
 ## VARIABLES FOR INTRO SCREEN
 instructionScreen = False
@@ -308,13 +308,13 @@ while Intro:
                 if event.key == pygame.K_UP:
                     if(pointS):
                         winChange += 50
-                        
+
                     elif(pScreen):
                         character = "Two Player"
                 if event.key == pygame.K_DOWN:
                     if(pointS):
                         winChange -= 50
-                        
+
                 if event.key == pygame.K_LEFT:
                     if(pScreen):
                         character = "man"
@@ -332,31 +332,31 @@ while Intro:
                 if event.key == pygame.K_UP:
                     if(pointS):
                         winChange = 0
-                        
+
                     elif(pScreen):
                         character = "Two Player"
                 if event.key == pygame.K_DOWN:
                     if(pointS):
                         winChange = 0
         ## update points to win
-            
+
         win += winChange
         if(pointS):
             pygame.time.delay(175)
         if(win < 50):
             win = 10500
-            
+
         elif(win > 10500):
             win = 50
-            
+
         pygame.display.update()
         clock.tick(60)
 
 ### INITALIZE MUSIC SELECTION FOR GAME PLAY
 
-    
+
 music()
-  
+
 initalize()
 
 
@@ -366,7 +366,7 @@ initalize()
 
 while not gameExit:
     pygame.mixer.music.get_busy()
-        
+
     #######EVENTS########
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -377,17 +377,17 @@ while not gameExit:
                 pygame.display.update()
                 if(manScore > womanScore):
                     score_counter("Player One Lead", BLACK, 440, 280)
-                    
+
                 else:
                     score_counter("Player Two Lead", BLACK, 440, 280)
-                    
+
             score_counter("Final Score:  " + str(womanScore + manScore), BLACK, 460, 340)
             pygame.display.update()
             pygame.time.delay(2500)
             gameExit = True
             ## END CLOSING DISPLAY
 
-         ## CHECK GAME KEY EVENTS ##  
+         ## CHECK GAME KEY EVENTS ##
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
                 manChangeX += manSpeed
@@ -425,7 +425,7 @@ while not gameExit:
                 pygame.quit()
                 quit()
                 sys.exit(0)
-        ## CHECK KEYUP EVENTS 
+        ## CHECK KEYUP EVENTS
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT:
                 manChangeX = 0
@@ -470,11 +470,11 @@ while not gameExit:
     ## CHECK IF WIN EXTRACT TO METHOD
     checkForWin(manScore, womanScore, character)
     ## END CHECK IF WIN METHOD
-        
+
     #### render background
     gameDisplay.blit(background, (0,0))
 
-          
+
     ### RAISE LEVEL METHOD
     if(baconPick == True and bananaPick == True and kfcPick):
         score_counter("NEXT LEVEL", GOLD, 440, 210)
@@ -488,15 +488,15 @@ while not gameExit:
         womanX = randint(2,1047)
         womanY = randint(5, 400)
         womanDirY = "down"
-        
+
         if(randint(0,14) == randint(0,14)):
            bob = True
 
         select = randint(0,5)
         while select == prevSelect:
             select = randint(0,5)
-        
-        ## Randomly place objects within contstraints ##  
+
+        ## Randomly place objects within contstraints ##
         if(select == 1):
             background = background_image
         elif(select == 2):
@@ -523,22 +523,22 @@ while not gameExit:
             baY = randint(26, 500)
             kfcX = randint(-40, 1000)
             kfcY = randint(26, 500)
-        
-        prevSelect = select   
+
+        prevSelect = select
         baconPick = False
         bananaPick = False
         kfcPick = False
         kfcX = randint(75, 775)
         kfcY = randint(75, 500)
-                        
-            
-        
-                  
+
+
+
+
 ## blit objects
-    
-    
+
+
 ## check boundaries PULL TO METHOD?
-    
+
     if(background == map2):
         ## make a get and set to modify these values
         if(manX > 800):
@@ -577,10 +577,10 @@ while not gameExit:
         elif(womanY >= 630):
             womanY = -104
 
-     
-        
-        
-## blit players      
+
+
+
+## blit players
 ## blit man image ## VARIABLES CHARACTER AND DIRECTION X AND Y COORDONATES
     if(character == "Two Player" or character == "man"):
         if(manDirY == "down" and manDirX == "left"):
@@ -603,9 +603,9 @@ while not gameExit:
     if(mFrog and randint(0,100) == 24):
         score_counter("**Croak*", GOLD, manX, manY)
         pygame.time.delay(200)
-    
+
 ## blit woman image
-    if(character == "Two Player"): 
+    if(character == "Two Player"):
         if(womanDirY == "down" and womanDirX == "left"):
             gameDisplay.blit(womanDL,(womanX,womanY))
         elif(womanDirY == "down" and womanDirX == "right"):
@@ -618,8 +618,8 @@ while not gameExit:
     if(wFrog and randint(0,100) == 24):
         score_counter("**ribbit*", GOLD, womanX, womanY)
         pygame.time.delay(200)
-        
-        
+
+
     ###check if items remain
         ## CHECK BANANA STATUS
     if(bananaPick == False):
@@ -631,20 +631,20 @@ while not gameExit:
                 if manY >bY and manY < bY + 70 or manY + 70 > bY and manY + 70 < bY:
                     bananaPick = True
                     manScore += 3
-                    
+
                     score_counter("+3", GOLD, bX, bY)
 
-                
-        if(character == "Two Player"):           
+
+        if(character == "Two Player"):
             if womanX> bX and womanX < bX + 70 or womanX + 70 > bX and womanX + 70 < bX:
 
                     if womanY >bY and womanY < bY + 70 or womanY + 70 > bY and womanY + 70 < bY:
-                        
+
                         womanScore += 3
                         bananaPick = True
                         score_counter("+3", GOLD, bX, bY)
 
-                        
+
     ## CHECK BACON STATUS
     if(baconPick == False):
         gameDisplay.blit(bacon,(baX,baY))
@@ -658,14 +658,14 @@ while not gameExit:
 
                     score_counter("+5", GOLD, baX, baY)
 
-        if(character == "Two Player"):           
+        if(character == "Two Player"):
             if womanX> baX and womanX < baX + 100 or womanX + 100 > baX and womanX +100 < baX:
                     if womanY >baY and womanY < baY + 150 or womanY + 150 > baY and womanY + 150 < baY:
                         womanScore += 5
                         baconPick = True
                         score_counter("+5", GOLD, baX, baY)
 
-                 
+
     ## CHECK KFC STATUS ##
     if(kfcPick == False):
         if(randint(0, 80) == randint(0,80)):
@@ -679,7 +679,7 @@ while not gameExit:
 
                     score_counter("YUM +25", GOLD, kfcX, kfcY)
 
-        if(character == "Two Player"):           
+        if(character == "Two Player"):
             if womanX> kfcX and womanX < kfcX + 70 or womanX + 70 > kfcX and womanX + 70 < kfcX:
                     if womanY >kfcY and womanY < kfcY + 70 or womanY + 70 > kfcY and womanY + 70 < kfcY:
                         womanScore += 25
@@ -696,44 +696,44 @@ while not gameExit:
             if manX> wX and manX < wX + 70 or manX + 70 > wX and manX + 70 < wX:
                     if manY >wY and manY < wY + 70 or manY + 70 > wY and manY + 70 < wY:
                         wPick = True
-        
+
                         score_counter("*Croak*", GOLD, wX, wY)
-                        manUL = pygame.image.load('frogL.png')
-                        manUR = pygame.image.load('frog.png')
-                        manDL = pygame.image.load('frogL.png')
-                        manDR = pygame.image.load('frog.png')
+                        manUL = pygame.image.load('resources/imgs/characters/frog/frogL.png')
+                        manUR = pygame.image.load('resources/imgs/characters/frog/frog.png')
+                        manDL = pygame.image.load('resources/imgs/characters/frog/frogL.png')
+                        manDR = pygame.image.load('resources/imgs/characters/frog/frog.png')
                         manChangeY = 4
                         mFrog = True
-                        
-            if(character == "Two Player"):           
+
+            if(character == "Two Player"):
                 if womanX> wX and womanX < wX + 70 or womanX + 70 > wX and womanX + 70 < wX:
                         if womanY >wY and womanY < wY + 70 or womanY + 70 > wY and womanY + 70 < wY:
                             wPick = True
                             score_counter("**ribbit*", GOLD, wX, wY)
-                            womanUL = pygame.image.load('frogL.png')
-                            womanUR = pygame.image.load('frog.png')
-                            womanDL = pygame.image.load('frogL.png')
-                            womanDR = pygame.image.load('frog.png')
+                            womanUL = pygame.image.load('resources/imgs/characters/frog/frogL.png')
+                            womanUR = pygame.image.load('resources/imgs/characters/frog/frog.png')
+                            womanDL = pygame.image.load('resources/imgs/characters/frog/frogL.png')
+                            womanDR = pygame.image.load('resources/imgs/characters/frog/frog.png')
                             womanChangeY = 4
                             wFrog = True
     ## CHANGE BACK FROM FROG
     elif(level == 8 or level == 13 or level == 18):
-        
+
         if (wPick == True):
-            ## return 
+            ## return
             wPick = False
-            manUL = pygame.image.load('pl1UpLeft.png')
-            manUR = pygame.image.load('pl1UpRight.png')
-            manDL = pygame.image.load('pl1DownLeft.png')
-            manDR = pygame.image.load('pl1DownRight.png')
+            manUL = pygame.image.load('resources/imgs/characters/male/pl1UpLeft.png.png')
+            manUR = pygame.image.load('resources/imgs/characters/male/pl1UpRight.png')
+            manDL = pygame.image.load('resources/imgs/characters/male/pl1DownLeft.png')
+            manDR = pygame.image.load('resources/imgs/characters/male/pl1DownRight.png')
             manChangeY = 0
             mFrog = False
 
             ## load woman images
-            womanUL = pygame.image.load('pl2UL.png')
-            womanUR = pygame.image.load('pl2UR.png')
-            womanDL = pygame.image.load('pl2DL.png')
-            womanDR = pygame.image.load('pl2DR.png')
+            womanUL = pygame.image.load('resources/imgs/characters/female/pl2UL.png')
+            womanUR = pygame.image.load('resources/imgs/characters/female/pl2UR.png')
+            womanDL = pygame.image.load('resources/imgs/characters/female/pl2DL.png')
+            womanDR = pygame.image.load('resources/imgs/characters/female/pl2DR.png')
             womanChangeY = 0
             wFrog = False
 
@@ -747,19 +747,19 @@ while not gameExit:
             if manX> moX and manX < moX + 70 or manX + 70 > moX and manX + 70 < moX:
                     if manY >moY and manY < moY + 70 or manY + 70 > moY and manY + 70 < moY:
                         moPick = True
-                        manUL = pygame.image.load('moL.png')
-                        manUR = pygame.image.load('moR.png')
-                        manDL = pygame.image.load('moL.png')
-                        manDR = pygame.image.load('moR.png')
+                        manUL = pygame.image.load('resources/imgs/characters/moL.png')
+                        manUR = pygame.image.load(resources/imgs/characters/'moR.png')
+                        manDL = pygame.image.load('resources/imgs/characters/moL.png')
+                        manDR = pygame.image.load('resources/imgs/characters/moR.png')
                         score_counter("HOLY MOSES!!", GOLD, 440, 210)
                         pygame.display.update()
                         #pygame.time.delay(450)
                         manSpeed = 25
                         whoISMoses = "man"
                         mLevel = level
-                        
-                        
-            if(character == "Two Player"):           
+
+
+            if(character == "Two Player"):
                 if womanX> moX and womanX < moX + 70 or womanX + 70 > moX and womanX + 70 < moX:
                         print("THIS ONE WORKED")
                         if womanY >moY and womanY < moY + 70 or womanY + 70 > wY and womanY + 70 < moY:
@@ -769,31 +769,31 @@ while not gameExit:
                             pygame.display.update()
                             pygame.time.delay(450)
                             #print("woman got banana")
-                            womanUL = pygame.image.load('moL.png')
-                            womanUR = pygame.image.load('moR.png')
-                            womanDL = pygame.image.load('moL.png')
-                            womanDR = pygame.image.load('moR.png')
+                            womanUL = pygame.image.load('resources/imgs/characters/moL.png')
+                            womanUR = pygame.image.load('resources/imgs/characters/moR.png')
+                            womanDL = pygame.image.load('resources/imgs/characters/moL.png')
+                            womanDR = pygame.image.load('resources/imgs/characters/moR.png')
                             womanSpeed = 25
                             whoIsMoses ="woman"
                             pygame.display.update()
                             mLevel = level
-                            
-    ## RETURN PLAYER FROM MOSES      
+
+    ## RETURN PLAYER FROM MOSES
     elif((moPick == True and (level - mLevel) == randint(4,8)) or (level - mLevel) > randint(8,11)):
-        
+
         if (moPick == True):
-            manUL = pygame.image.load('pl1UpLeft.png')
-            manUR = pygame.image.load('pl1UpRight.png')
-            manDL = pygame.image.load('pl1DownLeft.png')
-            manDR = pygame.image.load('pl1DownRight.png')
+            manUL = pygame.image.load('resources/imgs/characters/male/pl1UpLeft.png')
+            manUR = pygame.image.load('resources/imgs/characters/male/pl1UpRight.png')
+            manDL = pygame.image.load('resources/imgs/characters/male/pl1DownLeft.png')
+            manDR = pygame.image.load('resources/imgs/characters/male/pl1DownRight.png')
             moPick = False
             manSpeed = 11
 
             ## load woman images
-            womanUL = pygame.image.load('pl2UL.png')
-            womanUR = pygame.image.load('pl2UR.png')
-            womanDL = pygame.image.load('pl2DL.png')
-            womanDR = pygame.image.load('pl2DR.png')
+            womanUL = pygame.image.load('resources/imgs/characters/female/pl2UL.png')
+            womanUR = pygame.image.load('resources/imgs/characters/female/pl2UR.png')
+            womanDL = pygame.image.load('resources/imgs/characters/female/pl2DL.png')
+            womanDR = pygame.image.load('resources/imgs/characters/female/pl2DR.png')
             moPick = False
             womanSpeed = 11
 
@@ -803,8 +803,8 @@ while not gameExit:
             manScoreUP(manScore, womanScore)
         else:
             womanScoreUP(manScore,womanScore)
-            
-    ## PRINT SCORES - DISPLAY 
+
+    ## PRINT SCORES - DISPLAY
     score_counter("Team Score:  " + str(womanScore + manScore), GOLD, 425, 610)
     score_counter("Level:  " + str(level), GRAY, 40, 610)
     score_counter("Score to Win:  " + str(win), GRAY, 860, 610)
@@ -823,11 +823,10 @@ while not gameExit:
     clock.tick(60)
 
     ## ## ## END GAME LOOP ## ## ##
-        
+
 
 
 
 ## END GAME AFTER WHILE LOOP
 pygame.quit()
 quit()
-
