@@ -7,7 +7,7 @@ pygame.init()
 
 
 ####################################### INITAL VARIABLES###################################
-
+# please migrate this 2014 project to object oriented structure
 
 ## SET COLOR VALUES
 GRAY = (245, 245, 245)
