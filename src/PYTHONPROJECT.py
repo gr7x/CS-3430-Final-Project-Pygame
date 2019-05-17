@@ -1,22 +1,19 @@
 import pygame
 import os
 import GameScreen
-gs = GameScreen.GameScreen()
-#from src
-
+import Game
+import FontG
+import Player
 from random import randint
+f = FontG.Fonts()
+G = Game.G()
+gs = GameScreen.GameScreen()
 
 pygame.init()
 
 
 ####################################### INITAL VARIABLES###################################
 # please migrate this 2014 project to object oriented structure
-
-## SET COLOR VALUES ... might leave here if can't find better method
-GRAY = (245, 245, 245)
-GOLD = (255, 215, 0)
-WHITE = (255,255,255)
-BLACK = (0,0,0)
 
 ## LOAD BACKGROUND IMAGES ... LEave til last find better method if exists
 gameDisplay = pygame.display.set_mode((1159,659))
@@ -29,9 +26,7 @@ spa = pygame.image.load("../resources/imgs/maps/pool.png").convert()
 
 
 
-## SETUP FONT ... Leave til last (font class??)
-font = pygame.font.SysFont(None, 45)
-font1 = pygame.font.SysFont(None, 60)
+## fix later maybe? or leav for speed
 clock = pygame.time.Clock()
 
 ## SETUP TIME  ... maybe make time class
@@ -46,16 +41,8 @@ character = "Two Player"
 background = background_image
 
 ## INITALIZE MAN VALUES ~> PORTING TO PLAYER CLASS
-#p1 = Player(50, 50) - use instead
+p1=Player.Player(50,50,"right")
 
-manX = 50
-manY = 50
-manChangeX = 0
-manChangeY = 0
-manDirY = "down"  ## not put in class
-manDirX = "right" ##not put in class
-manSpeed = 11
-manScore = 00
 mScoreLabel = "GOLD" ## not put in class
 
 #use these somehow in class
@@ -66,15 +53,9 @@ manDR = pygame.image.load('../resources/imgs/characters/male/pl1DownRight.png')
 
 
 ## INITALIZE WOMAN VALUES ~> PORTING TO PLAYER CLASS
-#p2 = Player(200, 200) - use instead
-womanX =200
-womanY =200
-womanChangeY = 0
-womanChangeX = 0
-womanDirY = "down" ## not put in class
-womanDirX = "left" ## not put in class
-womanSpeed = 11
-womanScore = 00
+p2=Player.Player(200,200, "left")
+p2.dirY = "down" ## not put in class
+p2.dirX = "left" ## not put in class
 wScoreLabel = "GOLD" ## not put in class
 
 #use these in class somehow LEAVE til later find a good way to do this
@@ -160,43 +141,6 @@ winChange = 0
 
 
 ## METHOD TO DISPLAY TEXT TO THE SCREEN
-def score_counter(msg, color, x, y): #move to gameScreen ... placed in gameScreen
-    if(color == GOLD):
-        screen_text = font1.render(msg, True, color)
-    else:
-        screen_text = font.render(msg, True, color)
-    gameDisplay.blit(screen_text, [x, y])
-
-def initalize():  #create initalizer class  ....   placed in gameScreen
-    score_counter("Initalizing.", WHITE, 400, 257)
-    pygame.time.delay(400)
-    score_counter("Initalizing.", WHITE, 400, 257)
-    pygame.display.update()
-    pygame.time.delay(250)
-    gameDisplay.fill(BLACK)
-    score_counter("Initalizing..", WHITE, 400, 257)
-    pygame.display.update()
-    pygame.time.delay(250)
-    score_counter("Initalizing...", WHITE, 400, 257)
-    pygame.display.update()
-    pygame.time.delay(300)
-
-def closing(): #define closing class   ....placed in gameScreen
-            gameDisplay.fill(BLACK)
-            score_counter("Closing....", WHITE, 400, 257)
-            pygame.time.delay(350)
-            score_counter("Closing...", WHITE, 400, 257)
-            pygame.display.update()
-            pygame.time.delay(250)
-            gameDisplay.fill(BLACK)
-            score_counter("Closing..", WHITE, 400, 257)
-            pygame.display.update()
-            pygame.time.delay(250)
-            score_counter("Closing.", WHITE, 400, 257)
-            pygame.display.update()
-            pygame.time.delay(250)
-            gameDisplay.blit(intro_image,(0,0))
-            score_counter("Game Over", GOLD, 455, 210)
 
 def music(): # move to audio class ... leave here for now then fix
     x = randint (1,7)
@@ -216,66 +160,23 @@ def music(): # move to audio class ... leave here for now then fix
     elif(x==7):
         pygame.mixer.music.load("../resources/audio/soundtrack/PS2.wav")
 
-    gameDisplay.fill(BLACK)
+    gameDisplay.fill(f.BLACK)
     pygame.mixer.music.play(-1,0)
 
-def manScoreUP(womanScore, manScore): #move to gameScreen  ....placed in gameScreen
-    score_counter("Player 2:   " + str(womanScore), WHITE, 175, 17)
-    score_counter("Player 1:   " + str(manScore), GOLD, 785, 13)
+def checkForWin(p1Score, p2Score, character): #moveto Game Logic then clean up
 
-def womanScoreUP(manScore, womanScore): #move to gameScreen  ....placed in gameScreen
-    score_counter("Player 2:   " + str(womanScore), GOLD, 155, 13)
-    score_counter("Player 1:   " + str(manScore), WHITE, 785, 17)
-
-def introMain(): #move to IntroScreen  ....placed in gameScreen
-    score_counter("FOOD RUN", GOLD, 450, 180)
-    score_counter("Press i: To View Instructions", BLACK, 400, 257)
-    score_counter("Press n: To Select Player Mode", WHITE, 400, 307)
-    score_counter("Press w: To Set Winning Points", BLACK, 400, 357)
-    score_counter("Press s to Start", BLACK, 450, 457)
-
-def instructionMenu(): #move to IntroScreen  ....placed in gameScreen
-    score_counter("Instructions", GOLD, 455, 17)
-    score_counter("Use the arrow keys to move the character(s) to collect", BLACK, 180, 80)
-    score_counter("food items scattered throughout the maps to earn points. If two", BLACK, 180, 120)
-    score_counter("player mode is enabled the second player uses the keys (a)" , BLACK, 180, 160)
-    score_counter("to go left, (d) up, (w) right, and (x) to move down. ", BLACK, 180, 200)
-    score_counter("Press M to return to the main menu", BLACK, 375, 517)
-
-def playerScreen(character, womanDL, manDR):  #....placed in gameScreen
-    score_counter("Players Select", GOLD, 455, 17)
-    score_counter("Player mode:  "+ character.upper(), BLACK, 400, 110)
-    score_counter("Press up for two player left for single woman or right single player man", BLACK, 50, 415)
-    score_counter("Press M to return to the menu", BLACK, 375, 517)
-    if(character == "Two Player"):
-       gameDisplay.blit(womanDL,(600,150))
-       gameDisplay.blit(manDR,(400,150))
-    elif(character == "woman"):
-        gameDisplay.blit(womanDL,(530,180))
-    elif(character == "man"):
-        gameDisplay.blit(manDR,(420,150))
-
-def winScreen(win):  #push to intro render #....placed in gameScreen
-    score_counter("Win Limit", GOLD, 455, 17)
-    score_counter("Points to Win:  ", BLACK, 430, 110)
-    score_counter(str(win), GOLD, 650, 105)
-    score_counter("Use the the up and down arrow keys to change the win limit", BLACK, 150, 200)
-    score_counter("Press M to return to the menu", BLACK, 375, 517)
-
-
-def checkForWin(manScore, womanScore, character): #moveto Game Logic then clean up
-    if((manScore + womanScore) >= win):
+    if((p1Score + p2Score) >= win):
         gameDisplay.blit(intro_image,(0,0))
-        score_counter("SCORE ACHIEVED!", GOLD, 375, 210)
+        gs.score_counter("SCORE ACHIEVED!", f.GOLD, 375, 210)
         if(character == "Two Player"):
             pygame.display.update()
-            if(manScore > womanScore):
-                score_counter("Player One Lead", BLACK, 440, 280)
+            if(p1.score > p2Score):
+                gs.score_counter("Player One Lead", f.BLACK, 440, 280)
 
             else:
-                score_counter("Player Two Lead", BLACK, 440, 280)
+                gs.score_counter("Player Two Lead", f.BLACK, 440, 280)
 
-        score_counter("Final Score:  " + str(womanScore + manScore), BLACK, 455, 340)
+        gs.score_counter("Final Score:  " + str(p1Score + p2Score), f.BLACK, 455, 340)
         pygame.display.update()
         pygame.time.delay(2500)
         gameExit = True
@@ -297,13 +198,13 @@ while Intro:
 
         ### CHECKS TO CHOOSE WHICH SCREEN TO DISPLAY ### PULL BASED ON BOOL VALUES
         if not (pScreen or instructionScreen or pointS):
-            introMain()  ## call class for these
+            gs.introMain()
         elif(instructionScreen):
-            instructionMenu()
+            gs.instructionMenu()
         elif(pScreen):
-            playerScreen(character, womanDL, manDR)
+            gs.playerScreen(character, womanDL, manDR)
         elif(pointS):
-            winScreen(win)
+            gs.winScreen(win)
 
 
         ### Intro EVENTS  #################### FIX LAST besides using classes to change data
@@ -352,8 +253,8 @@ while Intro:
                 if event.key == pygame.K_g:
                     if(pointS):
                         x = 7
-                        womanSpeed = 20 #use classes
-                        manSpeed = 20 #use classes
+                        p2.speed = 20 #use classes
+                        p1.speed = 20 #use classes
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     if(pointS):
@@ -383,7 +284,7 @@ while Intro:
 
 music()
 
-initalize()
+gs.initalize()
 
 
 
@@ -398,16 +299,16 @@ while not gameExit: ## leave here but use classes to chnage data
         if event.type == pygame.QUIT:
             ## CLOSING DISPLAY ## POSSIBLY PULL TO A METHOD
             pygame.mixer.music.play(-1,0)
-            closing()
+            gs.closing()
             if(character == "Two Player"):
                 pygame.display.update()
-                if(manScore > womanScore):
-                    score_counter("Player One Lead", BLACK, 440, 280)
+                if(p1.score > p2.score):
+                    gs.score_counter("Player One Lead", f.BLACK, 440, 280)
 
                 else:
-                    score_counter("Player Two Lead", BLACK, 440, 280)
+                    gs.score_counter("Player Two Lead", f.BLACK, 440, 280)
 
-            score_counter("Final Score:  " + str(womanScore + manScore), BLACK, 460, 340) ## use get functions for score
+            gs.score_counter("Final Score:  " + str(p2.score + p1.score), f.BLACK, 460, 340) ## use get functions for score
             pygame.display.update()
             pygame.time.delay(2500)
             gameExit = True
@@ -416,87 +317,72 @@ while not gameExit: ## leave here but use classes to chnage data
          ## CHECK GAME KEY EVENTS ##
         if event.type == pygame.KEYDOWN: #FIX LAST besides using classes to change data
             if event.key == pygame.K_RIGHT:
-                manChangeX += manSpeed
-                manDirX = "right"
-                #print("Right Key Pressed")
+                p1.deltaX += p1.speed
+                p1.dirX = "right"
             if event.key == pygame.K_LEFT:
-                #print("Left Key Pressed")
-                manChangeX -= manSpeed
-                manDirX = "left"
+                p1.deltaX -= p1.speed
+                p1.dirX = "left"
             if event.key == pygame.K_UP:
-                #print("Up Key Pressed")
-                manChangeY -= manSpeed
-                manDirY = "up"
+                p1.deltaY -= p1.speed
+                p1.dirY = "up"
             if event.key == pygame.K_DOWN:
-                #print("Down key Pressed")
-                manChangeY += manSpeed
-                manDirY = "down"
+                p1.deltaY += p1.speed
+                p1.dirY = "down"
             if event.key == pygame.K_a:
-                #print("A Key Pressed")
-                womanChangeX -= womanSpeed
-                womanDirX = "left"
+                p2.deltaX -= p2.speed
+                p2.dirX = "left"
             if event.key == pygame.K_d:
-                #print("D Key Pressed")
-                womanChangeX += womanSpeed
-                womanDirX = "right"
+                p2.deltaX += p2.speed
+                p2.dirX = "right"
             if event.key == pygame.K_w:
-                #print("W Key Pressed")
-                womanChangeY -= womanSpeed
-                womanDirY = "up"
-            if event.key == pygame.K_x:
-                #print("Z Key Pressed")
-                womanChangeY += womanSpeed
-                womanDirY = "down"
+                p2.deltaY -= p2.speed
+                p2.dirY = "up"
+            if event.key == pygame.K_s:
+                p2.deltaY += p2.speed
+                p2.dirY = "down"
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 quit()
                 sys.exit(0)
+
         ## CHECK KEYUP EVENTS
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_RIGHT:
-                manChangeX = 0
-                manDirX = "right"
-                #print("Right Key Pressed")
+                p1.deltaX = 0
+                p1.dirX = "right"
             if event.key == pygame.K_LEFT:
-                #print("Left Key Pressed")
-                manChangeX = 0
-                manDirX = "left"
+                p1.deltaX = 0
+                p1.dirX = "left"
             if event.key == pygame.K_UP:
-                #print("Up Key Pressed")
-                manChangeY = 0
-                manDirY = "up"
+                p1.deltaY = 0
+                p1.dirY = "up"
             if event.key == pygame.K_DOWN:
-                #print("Down key Pressed")
-                manChangeY = 0
-                manDirY = "down"
+                p1.deltaY = 0
+                p1.dirY = "down"
             if event.key == pygame.K_a:
-                womanChangeX = 0
-                #print("A Key Pressed")
-                #womanChangeX = 0
-                womanDirX = "left"
+                p2.deltaX = 0
+                p2.deltaX = 0
+                p2.dirX = "left"
             if event.key == pygame.K_d:
-                #print("D Key Pressed")
-                womanChangeX = 0
-                womanDirX = "right"
+                p2.deltaX = 0
+                p2.dirX = "right"
             if event.key == pygame.K_w:
-                #print("W Key Pressed")
-                womanChangeY = 0
-                womanDirY = "up"
-            if event.key == pygame.K_x:
-                #print("Z Key Pressed")
-                womanChangeY = 0
-                womanDirY = "down"
+                p2.deltaY = 0
+                p2.dirY = "up"
+            if event.key == pygame.K_s:
+                p2.deltaY = 0
+                p2.dirY = "down"
 
     ####update movment POSSIBLY PULL TO A METHOD
 
     #update the following in respective player classes
-    manX += manChangeX
-    manY += manChangeY
-    womanX += womanChangeX
-    womanY += womanChangeY
+    p1.x += p1.deltaX
+    p1.y += p1.deltaY
 
+    p2.x += p2.deltaX
+    p2.y += p2.deltaY
     ## CHECK IF WIN EXTRACT TO METHOD # leave as is just access inside class
-    checkForWin(manScore, womanScore, character)
+    checkForWin(p1.score, p2.score, character)
     ## END CHECK IF WIN METHOD
 
     #### render background  leave til later to figure out how to setup
@@ -505,17 +391,17 @@ while not gameExit: ## leave here but use classes to chnage data
 
     ### RAISE LEVEL METHOD move to game logic do later, pass Player object to this??
     if(baconPick == True and bananaPick == True and kfcPick):
-        score_counter("NEXT LEVEL", GOLD, 440, 210)
+        gs.score_counter("NEXT LEVEL", f.GOLD, 440, 210)
         pygame.display.update()
         pygame.time.delay(550)
         level += 1
         bob = False
-        manX = randint(2 ,1047)
-        manY = randint(5, 400)
-        manDirY = "down"
-        womanX = randint(2,1047)
-        womanY = randint(5, 400)
-        womanDirY = "down"
+        p1.x = randint(2 ,1047)
+        p1.y = randint(5, 400)
+        p1.dirY = "down"
+        p2.x= randint(2,1047)
+        p2.y = randint(5, 400)
+        p2.dirY = "down"
 
         if(randint(0,14) == randint(0,14)):
            bob = True
@@ -561,51 +447,49 @@ while not gameExit: ## leave here but use classes to chnage data
         kfcY = randint(75, 500)
 
 
-
-
 ## blit objects
 
 
-## check boundaries PULL TO METHOD?
+## check cross map boundaries PULL TO METHOD?
 ## leave here for now, but make more precise
     if(background == map2):
         ## make a get and set to modify these values <-- listen to past me
         #(do in getters and setters for respective classes)
-        if(manX > 800):
-            manX = 800
-        elif(manX < 26):
-            manX = 26
-        if(manY < 80):
-            manY = 80
-        elif(manY > 450):
-            manY = 450
+        if(p1.x > 800):
+            p1.x = 800
+        elif(p1.x < 26):
+            p1.x = 26
+        if(p1.y < 80):
+            p1.y = 80
+        elif(p1.y > 450):
+            p1.y = 450
 
-        if(womanX > 790):
-            womanX = 790
-        elif(womanX <= 146):
-            womanX = 146
-        if(womanY <= 40):
-            womanY = 40
-        elif(womanY >= 450):
-            womanY = 450
+        if(p2.x > 790):
+            p2.x = 790
+        elif(p2.x <= 146):
+            p2.x = 146
+        if(p2.y <= 40):
+            p2.y = 40
+        elif(p2.y >= 450):
+            p2.y = 450
     else:
-        if(manX > 1049):
-            manX = -175
-        elif(manX <= -185):
-            manX = 1049
-        if(manY <= -170):
-            manY = 540
-        elif(manY >= 572):
-            manY = -160
+        if(p1.x > 1049):
+            p1.x = -175
+        elif(p1.x <= -185):
+            p1.x = 1049
+        if(p1.y <= -170):
+            p1.y = 540
+        elif(p1.y >= 572):
+            p1.y = -160
 
-        if(womanX > 1130):
-            womanX = -79
-        elif(womanX <= -73):
-            womanX = 1130
-        if(womanY <= -170):
-            womanY = 560
-        elif(womanY >= 630):
-            womanY = -104
+        if(p2.x > 1130):
+            p2.x = -79
+        elif(p2.x <= -73):
+            p2.x = 1130
+        if(p2.y <= -170):
+            p2.y = 560
+        elif(p2.y >= 630):
+            p2.y = -104
 
 
 
@@ -615,40 +499,40 @@ while not gameExit: ## leave here but use classes to chnage data
 
 ## leave til later use classes, maybe make a player renderer class???
     if(character == "Two Player" or character == "man"):
-        if(manDirY == "down" and manDirX == "left"):
-            gameDisplay.blit(manDL,(manX,manY))
-        elif(manDirY == "down" and manDirX == "right"):
-            gameDisplay.blit(manDR,(manX,manY))
-        elif(manDirY == "up" and manDirX == "left"):
-            gameDisplay.blit(manDL,(manX,manY))
-        elif(manDirY == "up" and manDirX == "right"):
-            gameDisplay.blit(manDR,(manX,manY))
+        if(p1.dirY == "down" and p1.dirX == "left"):
+            gameDisplay.blit(manDL,(p1.x,p1.y))
+        elif(p1.dirY == "down" and p1.dirX == "right"):
+            gameDisplay.blit(manDR,(p1.x, p1.y))
+        elif(p1.dirY == "up" and p1.dirX == "left"):
+            gameDisplay.blit(manDL,(p1.x,p1.y))
+        elif(p1.dirY == "up" and p1.dirX == "right"):
+            gameDisplay.blit(manDR,(p1.x,p1.y))
     if (character == "woman"):
-        if(manDirY == "down" and manDirX == "left"):
-            gameDisplay.blit(womanDL,(manX,manY))
-        elif(manDirY == "down" and manDirX == "right"):
-            gameDisplay.blit(womanDR,(manX,manY))
-        elif(manDirY == "up" and manDirX == "left"):
-            gameDisplay.blit(womanDL,(manX,manY))
-        elif(manDirY == "up" and manDirX == "right"):
-            gameDisplay.blit(womanDR,(manX,manY))
+        if(p1.dirY == "down" and p1.dirX == "left"):
+            gameDisplay.blit(womanDL,(p1.x,p1.y))
+        elif(p1.dirY == "down" and p1.dirX == "right"):
+            gameDisplay.blit(womanDR,(p1.x,p1.y))
+        elif(p1.dirY == "up" and p1.dirX == "left"):
+            gameDisplay.blit(womanDL,(p1.x,p1.y))
+        elif(p1.dirY == "up" and p1.dirX == "right"):
+            gameDisplay.blit(womanDR,(p1.x,p1.y))
     if(mFrog and randint(0,100) == 24):
-        score_counter("**Croak*", GOLD, manX, manY)
-        pygame.time.delay(200)
+        gs.score_counter("**Croak*", f.GOLD, p1.x, p1.y)
+        pygame.time.delay(200) # see if this make lag
 
 ## blit woman image
     if(character == "Two Player"):
-        if(womanDirY == "down" and womanDirX == "left"):
-            gameDisplay.blit(womanDL,(womanX,womanY))
-        elif(womanDirY == "down" and womanDirX == "right"):
-            gameDisplay.blit(womanDR,(womanX,womanY))
-        elif(womanDirY == "up" and womanDirX == "left"):
-            gameDisplay.blit(womanDL,(womanX,womanY))
-        elif(womanDirY == "up" and womanDirX == "right"):
-            gameDisplay.blit(womanDR,(womanX,womanY))
+        if(p2.dirY == "down" and p2.dirX == "left"):
+            gameDisplay.blit(womanDL,(p2.x,p2.y))
+        elif(p2.dirY == "down" and p2.dirX == "right"):
+            gameDisplay.blit(womanDR,(p2.x,p2.y))
+        elif(p2.dirY == "up" and p2.dirX == "left"):
+            gameDisplay.blit(womanDL,(p2.x,p2.y))
+        elif(p2.dirY == "up" and p2.dirX == "right"):
+            gameDisplay.blit(womanDR,(p2.x,p2.y))
 
     if(wFrog and randint(0,100) == 24):
-        score_counter("**ribbit*", GOLD, womanX, womanY)
+        gs.score_counter("**ribbit*", f.GOLD, p2.x, p2.y)
         pygame.time.delay(200)
 
 
@@ -659,22 +543,22 @@ while not gameExit: ## leave here but use classes to chnage data
              bX = randint(-40, 1000)
              bY = randint(26, 500)
         gameDisplay.blit(banana,(bX,bY))
-        if manX> bX and manX < bX + 70 or manX + 70 > bX and manX + 70 < bX:
-                if manY >bY and manY < bY + 70 or manY + 70 > bY and manY + 70 < bY:
+        if p1.x> bX and p1.x < bX + 70 or p1.x + 70 > bX and p1.x + 70 < bX:
+                if p1.y >bY and p1.y < bY + 70 or p1.y + 70 > bY and p1.y + 70 < bY:
                     bananaPick = True
-                    manScore += 3
+                    p1.score += 3
 
-                    score_counter("+3", GOLD, bX, bY)
+                    gs.score_counter("+3", f.GOLD, bX, bY)
 
 
         if(character == "Two Player"):
-            if womanX> bX and womanX < bX + 70 or womanX + 70 > bX and womanX + 70 < bX:
+            if p2.x> bX and p2.x < bX + 70 or p2.x + 70 > bX and p2.x + 70 < bX:
 
-                    if womanY >bY and womanY < bY + 70 or womanY + 70 > bY and womanY + 70 < bY:
+                    if p2.y >bY and p2.y < bY + 70 or p2.y + 70 > bY and p2.y + 70 < bY:
 
-                        womanScore += 3
+                        p2.score += 3
                         bananaPick = True
-                        score_counter("+3", GOLD, bX, bY)
+                        gs.score_counter("+3", f.GOLD, bX, bY)
 
 
     ## CHECK BACON STATUS
@@ -683,19 +567,19 @@ while not gameExit: ## leave here but use classes to chnage data
         if(randint(0, 80) == randint(0,80)):
              baX = randint(-40, 1000)
              baY = randint(26, 500)
-        if manX> baX and manX < baX + 100 or manX + 100 > baX and manX + 100 < baX:
-                if manY >baY and manY < baY + 150 or manY + 150 > baY and manY + 150 < baY:
+        if p1.x> baX and p1.x < baX + 100 or p1.x + 100 > baX and p1.x + 100 < baX:
+                if p1.y >baY and p1.y < baY + 150 or p1.y + 150 > baY and p1.y + 150 < baY:
                     baconPick = True
-                    manScore += 5
+                    p1.score += 5
 
-                    score_counter("+5", GOLD, baX, baY)
+                    gs.score_counter("+5", f.GOLD, baX, baY)
 
         if(character == "Two Player"):
-            if womanX> baX and womanX < baX + 100 or womanX + 100 > baX and womanX +100 < baX:
-                    if womanY >baY and womanY < baY + 150 or womanY + 150 > baY and womanY + 150 < baY:
-                        womanScore += 5
+            if p2.x> baX and p2.x < baX + 100 or p2.x + 100 > baX and p2.x +100 < baX:
+                    if p2.y >baY and p2.y < baY + 150 or p2.y + 150 > baY and p2.y + 150 < baY:
+                        p2.score += 5
                         baconPick = True
-                        score_counter("+5", GOLD, baX, baY)
+                        gs.score_counter("+5", f.GOLD, baX, baY)
 
 
     ## CHECK KFC STATUS ##
@@ -704,19 +588,19 @@ while not gameExit: ## leave here but use classes to chnage data
              kfcX = randint(-40, 1000)
              kfcY = randint(26, 500)
         gameDisplay.blit(kfc,(kfcX,kfcY))
-        if manX> kfcX and manX < kfcX + 70 or manX + 70 > kfcX and manX + 70 < kfcX:
-                if manY >kfcY and manY < kfcY + 70 or manY + 70 > kfcY and manY + 70 < kfcY:
+        if p1.x> kfcX and p1.x < kfcX + 70 or p1.x + 70 > kfcX and p1.x + 70 < kfcX:
+                if p1.y >kfcY and p1.y < kfcY + 70 or p1.y + 70 > kfcY and p1.y + 70 < kfcY:
                     kfcPick = True
-                    manScore += 25
+                    p1.score += 25
 
-                    score_counter("YUM +25", GOLD, kfcX, kfcY)
+                    gs.score_counter("YUM +25", f.GOLD, kfcX, kfcY)
 
         if(character == "Two Player"):
-            if womanX> kfcX and womanX < kfcX + 70 or womanX + 70 > kfcX and womanX + 70 < kfcX:
-                    if womanY >kfcY and womanY < kfcY + 70 or womanY + 70 > kfcY and womanY + 70 < kfcY:
-                        womanScore += 25
+            if p2.x> kfcX and p2.x < kfcX + 70 or p2.x + 70 > kfcX and p2.x + 70 < kfcX:
+                    if p2.y >kfcY and p2.y < kfcY + 70 or p2.y + 70 > kfcY and p2.y + 70 < kfcY:
+                        p2.score += 25
                         kfcPick = True
-                        score_counter("YUM +25", GOLD, kfcX, kfcY)
+                        gs.score_counter("YUM +25", f.GOLD, kfcX, kfcY)
 
     ## CHECK POTION STATUS
     if(level == 5 or level == 10 or level == 15):
@@ -725,28 +609,28 @@ while not gameExit: ## leave here but use classes to chnage data
                 wX = randint(-40, 1000)
                 wY = randint(26, 500)
             gameDisplay.blit(wand,(wX,wY))
-            if manX> wX and manX < wX + 70 or manX + 70 > wX and manX + 70 < wX:
-                    if manY >wY and manY < wY + 70 or manY + 70 > wY and manY + 70 < wY:
+            if p1.x> wX and p1.x < wX + 70 or p1.x + 70 > wX and p1.x + 70 < wX:
+                    if p1.y >wY and p1.y < wY + 70 or p1.y + 70 > wY and p1.y + 70 < wY:
                         wPick = True
 
-                        score_counter("*Croak*", GOLD, wX, wY)
+                        gs.score_counter("*Croak*", f.GOLD, wX, wY)
                         manUL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
                         manUR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
                         manDL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
                         manDR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
-                        manChangeY = 4
+                        p1.deltaY = 4
                         mFrog = True
 
             if(character == "Two Player"):
-                if womanX> wX and womanX < wX + 70 or womanX + 70 > wX and womanX + 70 < wX:
-                        if womanY >wY and womanY < wY + 70 or womanY + 70 > wY and womanY + 70 < wY:
+                if p2.x> wX and p2.x < wX + 70 or p2.x + 70 > wX and p2.x + 70 < wX:
+                        if p2.y >wY and p2.y < wY + 70 or p2.y + 70 > wY and p2.y + 70 < wY:
                             wPick = True
-                            score_counter("**ribbit*", GOLD, wX, wY)
+                            gs.score_counter("**ribbit*", f.GOLD, wX, wY)
                             womanUL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
                             womanUR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
                             womanDL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
                             womanDR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
-                            womanChangeY = 4
+                            p2.deltaY = 4
                             wFrog = True
     ## CHANGE BACK FROM FROG  ... leave til last
     elif(level == 8 or level == 13 or level == 18):
@@ -758,7 +642,7 @@ while not gameExit: ## leave here but use classes to chnage data
             manUR = pygame.image.load('../resources/imgs/characters/male/pl1UpRight.png')
             manDL = pygame.image.load('../resources/imgs/characters/male/pl1DownLeft.png')
             manDR = pygame.image.load('../resources/imgs/characters/male/pl1DownRight.png')
-            manChangeY = 0
+            p1.deltaY = 0
             mFrog = False
 
             ## load woman images
@@ -766,7 +650,7 @@ while not gameExit: ## leave here but use classes to chnage data
             womanUR = pygame.image.load('../resources/imgs/characters/female/pl2UR.png')
             womanDL = pygame.image.load('../resources/imgs/characters/female/pl2DL.png')
             womanDR = pygame.image.load('../resources/imgs/characters/female/pl2DR.png')
-            womanChangeY = 0
+            p2.deltaY = 0
             wFrog = False
 
     ## MAKE PLAYER MOSES
@@ -776,36 +660,36 @@ while not gameExit: ## leave here but use classes to chnage data
                 moX = randint(-40, 1000)
                 moY = randint(26, 500)
             gameDisplay.blit(rocks,(moX, moY))
-            if manX> moX and manX < moX + 70 or manX + 70 > moX and manX + 70 < moX:
-                    if manY >moY and manY < moY + 70 or manY + 70 > moY and manY + 70 < moY:
+            if p1.x> moX and p1.x < moX + 70 or p1.x + 70 > moX and p1.x + 70 < moX:
+                    if p1.y >moY and p1.y < moY + 70 or p1.y + 70 > moY and p1.y + 70 < moY:
                         moPick = True
-                        manUL = pygame.image.load('../resources/imgs/characters/moL.png')
-                        manUR = pygame.image.load('../resources/imgs/characters/moR.png')
-                        manDL = pygame.image.load('../resources/imgs/characters/moL.png')
-                        manDR = pygame.image.load('../resources/imgs/characters/moR.png')
-                        score_counter("HOLY MOSES!!", GOLD, 440, 210)
+                        manUL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
+                        manUR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
+                        manDL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
+                        manDR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
+                        gs.score_counter("HOLY MOSES!!", f.GOLD, 440, 210)
                         pygame.display.update()
                         #pygame.time.delay(450)
-                        manSpeed = 25
+                        p1.speed = 25
                         whoISMoses = "man"
                         mLevel = level
 
 
             if(character == "Two Player"):
-                if womanX> moX and womanX < moX + 70 or womanX + 70 > moX and womanX + 70 < moX:
+                if p2.x> moX and p2.x < moX + 70 or p2.x + 70 > moX and p2.x + 70 < moX:
                         print("THIS ONE WORKED")
-                        if womanY >moY and womanY < moY + 70 or womanY + 70 > wY and womanY + 70 < moY:
+                        if p2.y >moY and p2.y < moY + 70 or p2.y + 70 > wY and p2.y + 70 < moY:
                             #print("SECOND")
                             moPick = True
-                            score_counter("HOLY MOSES!!", GOLD, 440, 210)
+                            gs.score_counter("HOLY MOSES!!", f.GOLD, 440, 210)
                             pygame.display.update()
                             pygame.time.delay(450)
                             #print("woman got banana")
-                            womanUL = pygame.image.load('../resources/imgs/characters/moL.png')
-                            womanUR = pygame.image.load('../resources/imgs/characters/moR.png')
-                            womanDL = pygame.image.load('../resources/imgs/characters/moL.png')
-                            womanDR = pygame.image.load('../resources/imgs/characters/moR.png')
-                            womanSpeed = 25
+                            womanUL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
+                            womanUR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
+                            womanDL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
+                            womanDR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
+                            p2.speed = 25
                             whoIsMoses ="woman"
                             pygame.display.update()
                             mLevel = level
@@ -819,7 +703,7 @@ while not gameExit: ## leave here but use classes to chnage data
             manDL = pygame.image.load('../resources/imgs/characters/male/pl1DownLeft.png')
             manDR = pygame.image.load('../resources/imgs/characters/male/pl1DownRight.png')
             moPick = False
-            manSpeed = 11
+            p1.speed = 11
 
             ## load woman images
             womanUL = pygame.image.load('../resources/imgs/characters/female/pl2UL.png')
@@ -827,19 +711,20 @@ while not gameExit: ## leave here but use classes to chnage data
             womanDL = pygame.image.load('../resources/imgs/characters/female/pl2DL.png')
             womanDR = pygame.image.load('../resources/imgs/characters/female/pl2DR.png')
             moPick = False
-            womanSpeed = 11
+            p2.speed = 11
 
     x = "GOLD"
+    #combine scores to render method
     if(character == "Two Player"):
-        if(manScore > womanScore):
-            manScoreUP(manScore, womanScore)
+        if(p2.score > p2.score):
+            gs.manScoreUP(p2.score, p1.score)
         else:
-            womanScoreUP(manScore,womanScore)
+            gs.womanScoreUP(p1.score,p2.score)
 
     ## PRINT SCORES - DISPLAY  .... move to gameScreen (put these in one method together?)
-    score_counter("Team Score:  " + str(womanScore + manScore), GOLD, 425, 610)
-    score_counter("Level:  " + str(level), GRAY, 40, 610)
-    score_counter("Score to Win:  " + str(win), GRAY, 860, 610)
+    gs.score_counter("Team Score:  " + str(p2.score + p2.score), f.GOLD, 425, 610)
+    gs.score_counter("Level:  " + str(level), f.GRAY, 40, 610)
+    gs.score_counter("Score to Win:  " + str(win), f.GRAY, 860, 610)
 
 
     ##DISPLAY CLOCK   .. move to method in gameScreen
@@ -849,7 +734,7 @@ while not gameExit: ## leave here but use classes to chnage data
     if seconds > 60:
         minutes += 1
         seconds -= 60
-    score_counter("  "+str(minutes)+ " min: " +str(seconds)+" sec", GRAY, 485, 35)
+    gs.score_counter("  "+str(minutes)+ " min: " +str(seconds)+" sec", f.GRAY, 485, 35)
     milliseconds += clock.tick_busy_loop(60)
     pygame.display.update()
     clock.tick(60)
