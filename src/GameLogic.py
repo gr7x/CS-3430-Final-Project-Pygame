@@ -15,6 +15,7 @@ class Logic:
     def checkForWin(self, p1Score, p2Score, character): #moveto Game Logic then clean up
 
         if((p1Score + p2Score) >= self.win):
+            #fix closing segment
             gameDisplay.blit(intro_image,(0,0))
             gs.score_counter("SCORE ACHIEVED!", f.GOLD, 375, 210)
             if(character == "Two Player"):

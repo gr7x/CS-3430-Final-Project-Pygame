@@ -16,8 +16,8 @@ class Player:
     @x.setter
     def x(self, x):
         self.__x = x
-        if(x > 1049):
-                x = -175
+        #if(x > 1049):
+        #        x = -175
 
     @property
     def y(self):

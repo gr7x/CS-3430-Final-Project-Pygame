@@ -6,12 +6,13 @@ import FontG
 import Player
 import Item
 import GameLogic
+import Collisions
 from random import randint
-f = FontG.Fonts()
-G = Game.G()
+f  = FontG.Fonts()
+G  = Game.G()
 gs = GameScreen.GameScreen()
 gl = GameLogic.Logic()
-
+c  = Collisions.Collisions()
 
 
 def music(): # move to audio class ... figure out why turning screen black.. here
@@ -36,9 +37,12 @@ def music(): # move to audio class ... figure out why turning screen black.. her
     pygame.mixer.music.play(-1,0)
 
 if __name__ == '__main__':
+    C=0
+    D=0
     pygame.init()
-
-    gameDisplay = pygame.display.set_mode((1159,659))
+    SCREEN_WIDTH = 1159
+    SCREEN_HEIGHT = 659
+    gameDisplay = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
     pygame.display.set_caption('Memory Quest')
 
     ## LOAD BACKGROUND IMAGES ... Find a better way to store these
@@ -77,16 +81,28 @@ if __name__ == '__main__':
     milliseconds = 0
 
 ## create Both Players
+    Players = []
     p1=Player.Player(50,50,"right")
     p2=Player.Player(200,200, "left")
+    Players.append(p1)
+    Players.append(p2)
 
 
     ## create and destroy these during game play
-    bananaItem = Item.Item(610, 475)
-    baconItem = Item.Item(1035, 250)
-    kfcItem = Item.Item(randint(75, 775), randint(75, 500))
-    rocksItem = Item.Item(randint(75, 775),randint(75, 480))
-    wandItem =Item.Item(randint(75, 775), randint(75, 470))
+    activeItems = []
+    bananaItem = Item.Item(610, 475, banana )
+    activeItems.append(bananaItem)
+    baconItem = Item.Item(1035, 250, bacon)
+    activeItems.append(baconItem)
+    kfcItem = Item.Item(randint(75, 775), randint(75, 500), kfc)
+    activeItems.append(kfcItem)
+    rocksItem = Item.Item(randint(75, 775),randint(75, 480), rocks)
+    activeItems.append(rocksItem)
+    wandItem =Item.Item(randint(75, 775), randint(75, 470), wand)
+    activeItems.append(wandItem)
+
+    #store in active items class
+
 
 
     # Get rid of this
@@ -224,13 +240,12 @@ if __name__ == '__main__':
 
     ## ## ## MAIN GAME LOOP ## ## ##
 
-    while not gl.gameExit: ## leave here but use classes to chnage data
+    while not gl.gameExit: ## Great here
         pygame.mixer.music.get_busy()
 
         #######EVENTS########
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                ## CLOSING DISPLAY ## POSSIBLY PULL TO A METHOD
                 pygame.mixer.music.play(-1,0)
                 gs.closing()
                 if(gl.character == "Two Player"):
@@ -246,7 +261,6 @@ if __name__ == '__main__':
                 pygame.time.delay(2500)
                 gl.gameExit = True
                 ## END CLOSING DISPLAY
-
              ## CHECK GAME KEY EVENTS ## These probably stay here
             if event.type == pygame.KEYDOWN: #FIX LAST besides using classes to change data
                 if event.key == pygame.K_RIGHT:
@@ -313,11 +327,29 @@ if __name__ == '__main__':
         p2.x += p2.deltaX
         p2.y += p2.deltaY
 
+        # working on screen that follows the players
         gl.checkForWin(p1.score, p2.score, gl.character)
+        A=0
+        B=0
 
+        X=0 # horiztontal and vertical dist from top left corner
+        Y=0
+        #A and B distance from top left corner, C, D cropped part of image from top left corner, E and F are the image size
 
+        #HERE WORKING ON SCREEN MOVES WITH PKAYERS
+        #idea https://www.reddit.com/r/pygame/comments/1gluy8/best_way_to_create_map/
+        if(p1.x < 50 or p1.x> 500):
+            C+=p1.deltaX
+        if(p1.y < 50 or p1.y> 900):
+            C+=p1.deltaY
+        #D+=p1.deltaY
+        E= SCREEN_WIDTH
+        F= SCREEN_HEIGHT/4
+        gameDisplay.blit(background, (A,B), (C,D,E,F))
         #### render background  leave til later to figure out how to setup
-        gameDisplay.blit(background, (0,0))
+        ## if two play render 1 background
+        #gameDisplay.blit(background, (0,0))
+
 
 
         ### RAISE LEVEL METHOD move to game logic do later, pass Player object to this??
@@ -342,8 +374,9 @@ if __name__ == '__main__':
                 select = randint(0,5)
 
             ## Randomly place objects within contstraints ##
-            ## make a class that does this / seriously clean up
             ##MAKE RAISE LEVEL METHOD CREATE AND DELET OBJECTS INTEAD...
+            ## CREATE UPDATE MAP CLASS, use a data structure for
+            #object placment
             if(select == 1):
                 background = background_image
             elif(select == 2):
@@ -425,13 +458,28 @@ if __name__ == '__main__':
             elif(p2.y >= 630):
                 p2.y = -104
 
+        ##under construction
+        ## if one player render the screen to follow
+        #my_image = pygame.image.load("../resources/imgs/maps/map2.png")
+        # make the size of he surface adjustable
+        #dummy variables
+        #X=0 # horiztontal and vertical dist from top left corner
+        #Y=0
+        #A and B distance from top left corner, C, D cropped part of image from top left corner, E and F are the image size
+        #A=0
+        #B=0
+        #C=0
+        #D=0
+        #E= SCREEN_WIDTH/2
+        #F= SCREEN_HEIGHT
+        #surf = pygame.Surface((X,Y))
+        #gameDisplay.blit(my_image, (A,B), (C,D,E,F))
+        #surf.blit(my_image, (A,B), (C,D,E,F))
+        ## end under construction
 
-
-
-    ## blit players
-    ## blit man image ## VARIABLES CHARACTER AND DIRECTION X AND Y COORDONATES
-
-    ## leave til later use classes, maybe make a player renderer class???
+        ## blit players
+        ## blit man image ## VARIABLES CHARACTER AND DIRECTION X AND Y COORDONATES
+        ## leave til later use classes, maybe make a player renderer class???
         if(gl.character == "Two Player" or gl.character == "man"):
             if(p1.dirY == "down" and p1.dirX == "left"):
                 gameDisplay.blit(manDL,(p1.x,p1.y))
@@ -465,6 +513,8 @@ if __name__ == '__main__':
             elif(p2.dirY == "up" and p2.dirX == "right"):
                 gameDisplay.blit(womanDR,(p2.x,p2.y))
 
+
+
         if(wFrog and randint(0,100) == 24):
             gs.render_to_screen("**ribbit*", f.GOLD, p2.x, p2.y)
             pygame.time.delay(200)
@@ -472,11 +522,24 @@ if __name__ == '__main__':
 
         ###check if items remain .. make collision engine
             ## CHECK BANANA STATUS ## move to Game Logic / make it's own class
-        if(bananaItem.pick == False):
+
+        #RENDER Items
+        for i in Players:
+            for j in activeItems:
+                dummyVariable=True
+                #c.checkCollision() rig this up
+                #checkCollisiononItem
+                #if collides remove
+
+        for i in activeItems:
             if(randint(0, 100) == randint(0,100)):
-                 bananaItem.locX = randint(-40, 1000)
-                 bananaItem.locY = randint(26, 500)
-            gameDisplay.blit(banana,(bananaItem.locX,bananaItem.locY))
+                i.locX = randint(-40, 1000)
+                i.locY = randint(26, 500)
+                gameDisplay.blit(i.img, (i.locX,i.locY))
+
+
+## collision detection
+        if(bananaItem in activeItems):
             if p1.x> bananaItem.locX and p1.x < bananaItem.locX + 70 or p1.x + 70 > bananaItem.locX and p1.x + 70 < bananaItem.locX:
                     if p1.y >bananaItem.locY and p1.y < bananaItem.locY + 70 or p1.y + 70 > bananaItem.locY and p1.y + 70 < bananaItem.locY:
                         bananaItem.pick = True
@@ -494,13 +557,7 @@ if __name__ == '__main__':
                             bananaItem.pick = True
                             gs.render_to_screen("+3", f.GOLD, bananaItem.locX, bananaItem.locY)
 
-
-        ## CHECK BACON STATUS
-        if(baconItem.pick == False):
-            gameDisplay.blit(bacon,(baconItem.locX,baconItem.locY))
-            if(randint(0, 80) == randint(0,80)):
-                 baconItem.locX = randint(-40, 1000)
-                 baconItem.locY = randint(26, 500)
+        if(baconItem in activeItems):
             if p1.x> baconItem.locX and p1.x < baconItem.locX + 100 or p1.x + 100 > baconItem.locX and p1.x + 100 < baconItem.locX:
                     if p1.y >baconItem.locY and p1.y < baconItem.locY + 150 or p1.y + 150 > baconItem.locY and p1.y + 150 < baconItem.locY:
                         baconItem.pick = True
@@ -516,11 +573,7 @@ if __name__ == '__main__':
                             gs.render_to_screen("+5", f.GOLD, baconItem.locX, baconItem.locY)
 
 
-        ## CHECK KFC STATUS ##
-        if(kfcItem.pick == False):
-            if(randint(0, 80) == randint(0,80)):
-                 kfcItem.locX = randint(-40, 1000)
-                 kfcItem.locY = randint(26, 500)
+        if(kfcItem in activeItems):
             gameDisplay.blit(kfc,(kfcItem.locX,kfcItem.locY))
             if p1.x> kfcItem.locX and p1.x < kfcItem.locX + 70 or p1.x + 70 > kfcItem.locX and p1.x + 70 < kfcItem.locX:
                     if p1.y >kfcItem.locY and p1.y < kfcItem.locY + 70 or p1.y + 70 > kfcItem.locY and p1.y + 70 < kfcItem.locY:
@@ -535,6 +588,8 @@ if __name__ == '__main__':
                             p2.score += 25
                             kfcItem.pick = True
                             gs.render_to_screen("YUM +25", f.GOLD, kfcItem.locX, kfcItem.locY)
+
+## end crude collision detectio
 
         ## CHECK POTION STATUS
         if(gl.level == 5 or gl.level == 10 or gl.level == 15):
@@ -649,13 +704,14 @@ if __name__ == '__main__':
         x = "GOLD"
 
 
-        #Game Scree Frame Pass to Renderer
+        #STATS ON GAME SCREEN
         if(gl.character == "Two Player"):
                 gs.score_mode(p2.score, p1.score)
         ## PRINT SCORES - DISPLAY  .... move to gameScreen (put these in one method together?)
         gs.render_to_screen("Team Score:  " + str(p2.score + p2.score), f.GOLD, 425, 610)
         gs.render_to_screen("Level:  " + str(gl.level), f.GRAY, 40, 610)
         gs.render_to_screen("Score to Win:  " + str(gl.win), f.GRAY, 860, 610)
+
 
 
         ##DISPLAY CLOCK   .. move to method in gameScreen
@@ -671,8 +727,6 @@ if __name__ == '__main__':
         clock.tick(60)
 
         ## ## ## END GAME LOOP ## ## ##
-
-
 
 
     ## END GAME AFTER WHILE LOOP (Good as is)
