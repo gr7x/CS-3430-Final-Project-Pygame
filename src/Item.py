@@ -1,5 +1,5 @@
 class Item:
     def __init__(self, startX, startY):
-        locX=startX
-        locY=startY
-        pick=false
+        self.locX=startX
+        self.locY=startY
+        self.pick=False
