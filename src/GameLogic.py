@@ -16,7 +16,7 @@ class Logic:
 
         if((p1Score + p2Score) >= self.win):
             #fix closing segment
-            gameDisplay.blit(intro_image,(0,0))
+            gameDisplay.blit(intro_image,(0,0)) # fix later
             gs.score_counter("SCORE ACHIEVED!", f.GOLD, 375, 210)
             if(character == "Two Player"):
                 pygame.display.update()

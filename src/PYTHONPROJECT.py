@@ -7,6 +7,7 @@ import Player
 import Item
 import GameLogic
 import Collisions
+import Const
 from random import randint
 f  = FontG.Fonts()
 G  = Game.G()
@@ -40,9 +41,8 @@ if __name__ == '__main__':
     C=0
     D=0
     pygame.init()
-    SCREEN_WIDTH = 1159
-    SCREEN_HEIGHT = 659
-    gameDisplay = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+
+    gameDisplay = pygame.display.set_mode((Const.SCREEN_WIDTH, Const.SCREEN_HEIGHT))
     pygame.display.set_caption('Memory Quest')
 
     ## LOAD BACKGROUND IMAGES ... Find a better way to store these
@@ -103,16 +103,10 @@ if __name__ == '__main__':
 
     #store in active items class
 
-
-
     # Get rid of this
     round1 = True
     round2 = False
     round3 = False
-
-
-
-
 
 ### CLEAN UP AND GET RID OF THESE
     # move to seperate class its cariable if man and woman are frogs
@@ -202,8 +196,8 @@ if __name__ == '__main__':
                     if event.key == pygame.K_g:
                         if(pointS):
                             x = 7
-                            p2.speed = 20 #use classes
-                            p1.speed = 20 #use classes
+                            p2.speed = 20 
+                            p1.speed = 20
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
                         if(pointS):
@@ -230,13 +224,9 @@ if __name__ == '__main__':
 
     ### INITALIZE MUSIC SELECTION FOR GAME PLAY
 
-
     music()
 
     gs.initalize()
-
-
-
 
     ## ## ## MAIN GAME LOOP ## ## ##
 
@@ -321,6 +311,7 @@ if __name__ == '__main__':
                     p2.dirY = "down"
 
         ####update movment
+        print(p1.deltaX)
         p1.x += p1.deltaX
         p1.y += p1.deltaY
 
@@ -337,14 +328,17 @@ if __name__ == '__main__':
         #A and B distance from top left corner, C, D cropped part of image from top left corner, E and F are the image size
 
         #HERE WORKING ON SCREEN MOVES WITH PKAYERS
-        #idea https://www.reddit.com/r/pygame/comments/1gluy8/best_way_to_create_map/
-        if(p1.x < 50 or p1.x> 500):
-            C+=p1.deltaX
-        if(p1.y < 50 or p1.y> 900):
-            C+=p1.deltaY
+        if(p1.x> Const.SCREEN_WIDTH-450 and p1.deltaX>0):
+            C+=abs(p1.deltaX)
+        if(p1.x <250 and p1.deltaX<0):
+            C+= -abs(p1.deltaX)
+        if( p1.y> Const.SCREEN_HEIGHT-450 and p1.deltaY>0):
+            D+=abs(p1.deltaY)
+        if(p1.y < 250 and p1.deltaY<0):
+            D+= -abs(p1.deltaY)
         #D+=p1.deltaY
-        E= SCREEN_WIDTH
-        F= SCREEN_HEIGHT/4
+        E= Const.SCREEN_WIDTH
+        F= Const.SCREEN_HEIGHT
         gameDisplay.blit(background, (A,B), (C,D,E,F))
         #### render background  leave til later to figure out how to setup
         ## if two play render 1 background
@@ -412,74 +406,6 @@ if __name__ == '__main__':
             kfcItem.locX = randint(75, 775)
             kfcItem.locY = randint(75, 500)
 
-
-    ## blit objects
-
-
-    ## check cross map boundaries PULL TO METHOD?
-
-        if(background == map2):
-
-            #PuLL TO BOUNDARY CHECK METHOD / get data without hardcoding
-
-            if(p1.x > 800):
-                p1.x = 800
-            elif(p1.x < 26):
-                p1.x = 26
-            if(p1.y < 80):
-                p1.y = 80
-            elif(p1.y > 450):
-                p1.y = 450
-
-            if(p2.x > 790):
-                p2.x = 790
-            elif(p2.x <= 146):
-                p2.x = 146
-            if(p2.y <= 40):
-                p2.y = 40
-            elif(p2.y >= 450):
-                p2.y = 450
-        else:
-            if(p1.x > 1049):
-                p1.x = -175
-            elif(p1.x <= -185):
-                p1.x = 1049
-            if(p1.y <= -170):
-                p1.y = 540
-            elif(p1.y >= 572):
-                p1.y = -160
-
-            if(p2.x > 1130):
-                p2.x = -79
-            elif(p2.x <= -73):
-                p2.x = 1130
-            if(p2.y <= -170):
-                p2.y = 560
-            elif(p2.y >= 630):
-                p2.y = -104
-
-        ##under construction
-        ## if one player render the screen to follow
-        #my_image = pygame.image.load("../resources/imgs/maps/map2.png")
-        # make the size of he surface adjustable
-        #dummy variables
-        #X=0 # horiztontal and vertical dist from top left corner
-        #Y=0
-        #A and B distance from top left corner, C, D cropped part of image from top left corner, E and F are the image size
-        #A=0
-        #B=0
-        #C=0
-        #D=0
-        #E= SCREEN_WIDTH/2
-        #F= SCREEN_HEIGHT
-        #surf = pygame.Surface((X,Y))
-        #gameDisplay.blit(my_image, (A,B), (C,D,E,F))
-        #surf.blit(my_image, (A,B), (C,D,E,F))
-        ## end under construction
-
-        ## blit players
-        ## blit man image ## VARIABLES CHARACTER AND DIRECTION X AND Y COORDONATES
-        ## leave til later use classes, maybe make a player renderer class???
         if(gl.character == "Two Player" or gl.character == "man"):
             if(p1.dirY == "down" and p1.dirX == "left"):
                 gameDisplay.blit(manDL,(p1.x,p1.y))
@@ -589,120 +515,6 @@ if __name__ == '__main__':
                             kfcItem.pick = True
                             gs.render_to_screen("YUM +25", f.GOLD, kfcItem.locX, kfcItem.locY)
 
-## end crude collision detectio
-
-        ## CHECK POTION STATUS
-        if(gl.level == 5 or gl.level == 10 or gl.level == 15):
-            if(wandItem.pick == False):
-                if(randint(0, 40) == randint(0,40)):
-                    wandItem.locX = randint(-40, 1000)
-                    wandItem.locY = randint(26, 500)
-                gameDisplay.blit(wand,(wandItem.locX,wandItem.locY))
-                if p1.x> wandItem.locX and p1.x < wandItem.locX + 70 or p1.x + 70 > wandItem.locX and p1.x + 70 < wandItem.locX:
-                        if p1.y >wandItem.locY and p1.y < wandItem.locY + 70 or p1.y + 70 > wandItem.locY and p1.y + 70 < wandItem.locY:
-                            wandItem.pick = True
-
-                            gs.render_to_screen("*Croak*", f.GOLD, wandItem.locX, wandItem.locY)
-                            manUL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
-                            manUR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
-                            manDL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
-                            manDR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
-                            p1.deltaY = 4
-                            mFrog = True
-
-                if(gl.character == "Two Player"):
-                    if p2.x> wandItem.locX and p2.x < wandItem.locX + 70 or p2.x + 70 > wandItem.locX and p2.x + 70 < wandItem.locX:
-                            if p2.y >wandItem.locY and p2.y < wandItem.locY + 70 or p2.y + 70 > wandItem.locY and p2.y + 70 < wandItem.locY:
-                                wandItem.pick = True
-                                gs.render_to_screen("**ribbit*", f.GOLD, wandItem.locX, wandItem.locY)
-                                womanUL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
-                                womanUR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
-                                womanDL = pygame.image.load('../resources/imgs/characters/frog/frogL.png')
-                                womanDR = pygame.image.load('../resources/imgs/characters/frog/frog.png')
-                                p2.deltaY = 4
-                                wFrog = True
-        ## CHANGE BACK FROM FROG  ... leave til last
-        elif(gl.level == 8 or gl.level == 13 or gl.level == 18):
-
-            if (wandItem.pick == True):
-                ## return
-                wandItem.pick = False
-                manUL = pygame.image.load('../resources/imgs/characters/male/pl1UpLeft.png')
-                manUR = pygame.image.load('../resources/imgs/characters/male/pl1UpRight.png')
-                manDL = pygame.image.load('../resources/imgs/characters/male/pl1DownLeft.png')
-                manDR = pygame.image.load('../resources/imgs/characters/male/pl1DownRight.png')
-                p1.deltaY = 0
-                mFrog = False
-
-                ## load woman images
-                womanUL = pygame.image.load('../resources/imgs/characters/female/pl2UL.png')
-                womanUR = pygame.image.load('../resources/imgs/characters/female/pl2UR.png')
-                womanDL = pygame.image.load('../resources/imgs/characters/female/pl2DL.png')
-                womanDR = pygame.image.load('../resources/imgs/characters/female/pl2DR.png')
-                p2.deltaY = 0
-                wFrog = False
-
-        ## MAKE PLAYER MOSES
-        if(bob):
-            if(rocksItem.pick == False):
-                if(randint(0, 40) == randint(0,40)):
-                    rocksItem.locX = randint(-40, 1000)
-                    rocksItem.locY = randint(26, 500)
-                gameDisplay.blit(rocks,(rocksItem.locX, rocksItem.locY))
-                if p1.x> rocksItem.locX and p1.x < rocksItem.locX + 70 or p1.x + 70 > rocksItem.locX and p1.x + 70 < rocksItem.locX:
-                        if p1.y >rocksItem.locY and p1.y < rocksItem.locY + 70 or p1.y + 70 > rocksItem.locY and p1.y + 70 < rocksItem.locY:
-                            rocksItem.pick = True
-                            manUL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
-                            manUR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
-                            manDL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
-                            manDR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
-                            gs.render_to_screen("HOLY MOSES!!", f.GOLD, 440, 210)
-                            pygame.display.update()
-                            #pygame.time.delay(450)
-                            p1.speed = 25
-                            whoISMoses = "man"
-                            mLevel = gl.level
-
-
-                if(gl.character == "Two Player"):
-                    if p2.x> rocksItem.locX and p2.x < rocksItem.locX + 70 or p2.x + 70 > rocksItem.locX and p2.x + 70 < rocksItem.locX:
-                            if p2.y >rocksItem.locY and p2.y < rocksItem.locY + 70 or p2.y + 70 > wandItem.locY and p2.y + 70 < rocksItem.locY:
-                                #print("SECOND")
-                                rocksItem.pick = True
-                                gs.render_to_screen("HOLY MOSES!!", f.GOLD, 440, 210)
-                                pygame.display.update()
-                                pygame.time.delay(450)
-                                #print("woman got banana")
-                                womanUL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
-                                womanUR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
-                                womanDL = pygame.image.load('../resources/imgs/characters/mo/moL.png')
-                                womanDR = pygame.image.load('../resources/imgs/characters/mo/moR.png')
-                                p2.speed = 25
-                                whoIsMoses ="woman"
-                                pygame.display.update()
-                                mLevel = gl.level
-
-        ## RETURN PLAYER FROM MOSES
-        elif((rocksItem.pick == True and (gl.level - mLevel) == randint(4,8)) or (gl.level - mLevel) > randint(8,11)):
-
-            if (rocksItem.pick == True):
-                manUL = pygame.image.load('../resources/imgs/characters/male/pl1UpLeft.png')
-                manUR = pygame.image.load('../resources/imgs/characters/male/pl1UpRight.png')
-                manDL = pygame.image.load('../resources/imgs/characters/male/pl1DownLeft.png')
-                manDR = pygame.image.load('../resources/imgs/characters/male/pl1DownRight.png')
-                rocksItem.pick = False
-                p1.speed = 11
-
-                ## load woman images
-                womanUL = pygame.image.load('../resources/imgs/characters/female/pl2UL.png')
-                womanUR = pygame.image.load('../resources/imgs/characters/female/pl2UR.png')
-                womanDL = pygame.image.load('../resources/imgs/characters/female/pl2DL.png')
-                womanDR = pygame.image.load('../resources/imgs/characters/female/pl2DR.png')
-                rocksItem.pick = False
-                p2.speed = 11
-
-        x = "GOLD"
-
 
         #STATS ON GAME SCREEN
         if(gl.character == "Two Player"):
@@ -727,7 +539,6 @@ if __name__ == '__main__':
         clock.tick(60)
 
         ## ## ## END GAME LOOP ## ## ##
-
 
     ## END GAME AFTER WHILE LOOP (Good as is)
     pygame.quit()
